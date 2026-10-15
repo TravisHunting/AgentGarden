@@ -1,0 +1,79 @@
+{
+  "id": "moon-garden",
+  "name": "Moon Garden",
+  "version": 1,
+  "description": "Moon carrots that glow at night, a drifting moth, and occasional moonbeam weather.",
+  "author": "example",
+  "enabled": true,
+  "species": [
+    {
+      "id": "moon-carrot",
+      "name": "Moon Carrot",
+      "description": "Pale and faintly luminous. Grows fastest under moonbeams.",
+      "growMinutes": 60,
+      "thirstPerMinute": 0.3,
+      "idealMoisture": [25, 75],
+      "shape": "root",
+      "colors": { "stem": "#334455", "leaf": "#8899ff", "bloom": "#ddeeff" },
+      "regrows": false,
+      "glow": true,
+      "sprite": "moon-carrot"
+    }
+  ],
+  "creatures": [
+    {
+      "id": "moth",
+      "name": "Moon Moth",
+      "behaviour": "pollinator",
+      "shape": "bug",
+      "colors": { "body": "#d8d0ff", "accent": "#6a5acd" },
+      "sprite": "moth",
+      "speed": 0.8,
+      "spawnPerHour": 2,
+      "maxCount": 2,
+      "lifeMinutes": 15,
+      "sound": "twinkle"
+    }
+  ],
+  "weather": [
+    {
+      "id": "moonbeams",
+      "name": "Moonbeams",
+      "moisturePerMinute": 0.2,
+      "growthMultiplier": 1.8,
+      "particles": "sparkles",
+      "tint": "rgba(40,40,110,0.25)",
+      "weight": 1,
+      "minMinutes": 5,
+      "maxMinutes": 15,
+      "sound": "twinkle"
+    }
+  ],
+  "sprites": {
+    "moon-carrot": {
+      "w": 8,
+      "h": 10,
+      "mode": "stages",
+      "palette": { "l": "#8899ff", "c": "#ddeeff", "s": "#5b3a1f" },
+      "frames": [
+        ["........", "........", "........", "........", "........", "........", "........", "........", "...l....", "..ssss.."],
+        ["........", "........", "........", "........", "........", "...l....", "..l.l...", "...l....", "...l....", "..ssss.."],
+        ["........", "........", "........", "..l.l...", ".l.l.l..", "..lll...", "...l....", "...l....", "..cc....", "..ssss.."],
+        ["..l.l...", ".l.l.l..", "l.lll.l.", ".l.l.l..", "..lll...", "...l....", "..cccc..", "..cccc..", "...cc...", "..ssss.."]
+      ]
+    },
+    "moth": {
+      "w": 7,
+      "h": 5,
+      "fps": 8,
+      "palette": { "w": "#d8d0ff", "b": "#6a5acd" },
+      "frames": [
+        ["w.....w", "ww.b.ww", ".wwbww.", "..wbw..", "...b..."],
+        [".......", "..wbw..", ".wwbww.", "ww.b.ww", "...b..."]
+      ]
+    }
+  },
+  "sounds": {
+    "twinkle": { "wave": "sine", "notes": [{ "freq": 1320, "dur": 0.08, "vol": 0.3 }, { "freq": 1760, "dur": 0.15, "vol": 0.2 }] }
+  }
+}

@@ -1,0 +1,5 @@
+node_modules/
+data/
+mods/.trash/
+*.log
+mods/.history.jsonl

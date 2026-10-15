@@ -1,0 +1,20 @@
+{
+  "name": "agent-garden",
+  "version": "0.1.0",
+  "description": "An idle gardening game tended by your own AI agent, who can rewrite the garden — including its own code.",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node --disable-warning=ExperimentalWarning kernel/main.ts",
+    "dev": "node --disable-warning=ExperimentalWarning --watch kernel/main.ts",
+    "test": "node --disable-warning=ExperimentalWarning --test \"test/**/*.test.ts\" \"world/test/**/*.test.ts\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@types/node": "^24.19.2",
+    "typescript": "^5.9.3"
+  }
+}

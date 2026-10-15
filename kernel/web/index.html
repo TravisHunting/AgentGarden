@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agent Garden</title>
+    <link rel="stylesheet" href="/style.css" />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'><text y='14' font-size='14'>🌱</text></svg>" />
+  </head>
+  <body>
+    <div id="launcher" class="launcher" hidden>
+      <p>The garden is floating in its own window.</p>
+      <button id="restore" class="btn">Bring it back</button>
+    </div>
+
+    <div id="app">
+      <header class="topbar">
+        <div class="status" id="status" title="What your gardener is up to">🌱 Connecting…</div>
+        <div class="top-actions">
+          <span id="world-actions" class="world-actions"></span>
+          <button class="icon-btn" id="btn-mail" title="Mailbox">✉️<span class="badge" id="mail-badge" hidden>0</span></button>
+          <button class="icon-btn" id="btn-journal" title="Gardener's journal">📓</button>
+          <button class="icon-btn" id="btn-world" title="The shed: the garden's code and its history">🔨</button>
+          <button class="icon-btn" id="btn-settings" title="Settings">⚙️</button>
+          <button class="icon-btn" id="btn-pip" title="Float on top (picture-in-picture)">📌</button>
+          <button class="icon-btn" id="btn-help" title="How this works">❔</button>
+        </div>
+      </header>
+
+      <div class="banner" id="world-banner" hidden></div>
+
+      <main class="stage" id="stage"></main>
+      <div id="toasts"></div>
+
+      <footer class="toolbar" id="toolbar"></footer>
+
+      <!-- The world's own panels are added here -->
+      <div id="overlay"></div>
+
+      <!-- Kernel panels live inside #app so they travel with it into the floating window -->
+      <section class="panel" id="panel-welcome" hidden>
+        <header><h2>🌱 Welcome to Agent Garden</h2><button class="close" data-close>✕</button></header>
+        <div class="panel-body welcome">
+          <p>This little garden is looked after by <strong class="gardener-name">your gardener</strong>, a tiny AI who lives on the edge of your screen.</p>
+          <ul>
+            <li><strong>It runs on its own.</strong> Your gardener potters about planting, watering and chatting in speech bubbles, even while you're busy with other things.</li>
+            <li><strong>You can garden too.</strong> Pick a tool at the bottom and click a tile. Just know your gardener may have had plans for that carrot…</li>
+            <li><strong>Write letters.</strong> Drop a note in the ✉️ mailbox. A couple of minutes after you go quiet, your gardener reads everything you did and wrote, and decides what to do next.</li>
+            <li><strong>Letters can change the garden itself.</strong> New plants, creatures, weather, even rewriting the game's code in 🔨 the shed. Every change is checked first and can be undone.</li>
+            <li><strong>Keep it handy.</strong> 📌 floats the garden on top of your other windows. 📓 is your gardener's journal; ⚙️ is where you choose which AI does the thinking.</li>
+          </ul>
+          <div class="row"><span></span><button class="btn" id="btn-welcome-done">Let's begin</button></div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-wish" hidden>
+        <header><h2>✨ Your first wish</h2><button class="close" data-close>✕</button></header>
+        <div class="panel-body">
+          <p class="wish-question">The garden is a bare lawn for now. <strong>What kind of garden should I grow?</strong></p>
+          <div class="chips" id="wish-ideas"></div>
+          <textarea id="wish-text" rows="4" maxlength="2000" placeholder="A cottage garden full of flowers…"></textarea>
+          <div class="row">
+            <small>Be as practical or as strange as you like. You can always write more letters later.</small>
+            <button class="btn" id="wish-send">Plant this wish</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-mail" hidden>
+        <header><h2>✉️ Mailbox</h2><button class="close" data-close>✕</button></header>
+        <div class="panel-body">
+          <textarea id="letter-text" rows="4" maxlength="2000" placeholder="Dear gardener…"></textarea>
+          <div class="row">
+            <small>Your gardener reads letters after you've been away a little while. Letters can change the garden — even its code.</small>
+            <button class="btn" id="letter-send">Post letter</button>
+          </div>
+          <ul class="letters" id="letters"></ul>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-journal" hidden>
+        <header><h2>📓 Journal</h2><button class="close" data-close>✕</button></header>
+        <div class="panel-body">
+          <ul class="journal" id="journal"></ul>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-world" hidden>
+        <header><h2>🔨 The shed</h2><button class="close" data-close>✕</button></header>
+        <div class="panel-body">
+          <p class="muted" id="world-summary"></p>
+          <div class="row">
+            <small>Every version of the garden's code is kept. New code goes live only after passing checks, and stays on probation for a while.</small>
+            <button class="btn ghost" id="btn-reset-world">Reset to original</button>
+          </div>
+          <h3>Projects</h3>
+          <ul class="journal" id="rewrites"></ul>
+          <h3>Versions</h3>
+          <ul class="history" id="commits"></ul>
+        </div>
+      </section>
+
+      <section class="panel" id="panel-settings" hidden>
+        <header><h2>⚙️ Settings</h2><button class="close" data-close>✕</button></header>
+        <div class="panel-body">
+          <form id="settings-form">
+            <label>Gardener's name <input name="gardenerName" maxlength="24" required /></label>
+            <label>AI provider <select name="provider" id="provider"></select></label>
+            <p class="muted" id="provider-desc"></p>
+            <label>Model <input name="model" id="model" list="model-list" /></label>
+            <datalist id="model-list"></datalist>
+            <label>Think after the player has been quiet for (minutes) <input name="debounceMinutes" type="number" min="0.25" max="240" step="0.25" /></label>
+            <label class="check"><input name="codeRewrites" type="checkbox" /> Let the gardener rewrite the garden's code (after letters)</label>
+            <details>
+              <summary>Advanced</summary>
+              <label>Max planning repair iterations <input name="maxIterations" type="number" min="1" max="8" /></label>
+              <label>Planning timeout (seconds) <input name="timeoutSeconds" type="number" min="20" max="1800" /></label>
+              <label>Code rewrite attempts <input name="workshopRounds" type="number" min="1" max="6" /></label>
+              <label>Code rewrite time limit per attempt (minutes) <input name="workshopTimeoutMinutes" type="number" min="2" max="120" /></label>
+              <label>New code probation (minutes) <input name="probationMinutes" type="number" min="0.5" max="1440" step="0.5" /></label>
+              <label>CLI command override <input name="command" placeholder="claude / codex / full path" /></label>
+              <label>Base URL (HTTP providers) <input name="baseUrl" placeholder="https://…" /></label>
+            </details>
+            <div class="row">
+              <button class="btn" type="submit">Save</button>
+              <button class="btn ghost" type="button" id="btn-test">Test connection</button>
+              <button class="btn ghost" type="button" id="btn-think">Think now</button>
+            </div>
+            <p class="muted" id="settings-result"></p>
+          </form>
+        </div>
+      </section>
+    </div>
+
+    <script type="module" src="/shell.ts"></script>
+  </body>
+</html>
